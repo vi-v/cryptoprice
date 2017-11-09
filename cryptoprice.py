@@ -18,6 +18,8 @@ RESET = '\033[0;0m'
 if '-a' in args or not any("--" in s for s in args):
     findall = True
 
+cryptoData.sort(key=lambda x: x['name'].lower())
+
 if '-susda' in args:
     cryptoData.sort(key=lambda x: float(x['price_usd']), reverse=False)
 

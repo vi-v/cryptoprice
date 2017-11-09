@@ -15,7 +15,7 @@ OKGREEN = '\033[92m'
 FAIL = '\033[91m'
 RESET = '\033[0;0m'
 
-if '-a' in args:
+if '-a' in args or not any("--" in s for s in args):
     findall = True
 
 if '-susda' in args:

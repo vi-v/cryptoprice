@@ -15,9 +15,6 @@ RESET = '\033[0;0m'
 for data in cryptoData:
     crpytoDataMap[data['symbol']] = data
 
-#print args
-# print crpytoDataMap['LTC']['price_usd']
-
 for arg in args:
     arg = arg.strip().replace('-', '')
     priceUSD = crpytoDataMap[arg]['price_usd']
@@ -30,5 +27,4 @@ for arg in args:
         changeColor = OKGREEN
 
     print "%s%s (%s) \t| USD: %s \t| %% Change 24H: %s%s%s" % (RESET, coinName, arg, priceUSD, changeColor, percentChange24, RESET)
-
-
+    

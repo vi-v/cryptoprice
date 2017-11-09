@@ -19,16 +19,16 @@ if '-a' in args:
     findall = True
 
 if '-susda' in args:
-    cryptoData.sort(key=lambda x: x['price_usd'], reverse=False)
+    cryptoData.sort(key=lambda x: float(x['price_usd']), reverse=False)
 
 if '-susdd' in args:
-    cryptoData.sort(key=lambda x: x['price_usd'], reverse=True)
+    cryptoData.sort(key=lambda x: float(x['price_usd']), reverse=True)
 
 if '-s24ha' in args:
-    cryptoData.sort(key=lambda x: x['percent_change_24h'], reverse=False)
+    cryptoData.sort(key=lambda x: float(x['percent_change_24h']), reverse=False)
 
 if '-s24hd' in args:
-    cryptoData.sort(key=lambda x: x['percent_change_24h'], reverse=True)
+    cryptoData.sort(key=lambda x: float(x['percent_change_24h']), reverse=True)
 
 for arg in args:
     if arg.count('-') == 1:

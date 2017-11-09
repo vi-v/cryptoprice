@@ -29,6 +29,6 @@ for arg in args:
     else:
         changeColor = OKGREEN
 
-    print "%s%s (%s) \t| USD: %s \t| %% Change 24H: %s%s" % (RESET, coinName, arg, priceUSD, changeColor, percentChange24)
+    print "%s%s (%s) \t| USD: %s \t| %% Change 24H: %s%s%s" % (RESET, coinName, arg, priceUSD, changeColor, percentChange24, RESET)
 
 

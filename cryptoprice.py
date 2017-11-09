@@ -11,6 +11,10 @@ for data in cryptoData:
     crpytoDataMap[data['symbol']] = data
 
 print args
-print crpytoDataMap['LTC']['price_usd']
+# print crpytoDataMap['LTC']['price_usd']
+
+for arg in args:
+    arg = arg.strip().replace('-', '')
+    print crpytoDataMap[arg]['price_usd']
 
 

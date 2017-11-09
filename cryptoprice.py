@@ -10,6 +10,7 @@ crpytoDataMap = {} # Dictionary for faster access
 # Terminal colors
 OKGREEN = '\033[92m'
 FAIL = '\033[91m'
+RESET = '\033[0;0m'
 
 for data in cryptoData:
     crpytoDataMap[data['symbol']] = data
@@ -23,11 +24,11 @@ for arg in args:
     coinName = crpytoDataMap[arg]['name']
     percentChange24 = crpytoDataMap[arg]['percent_change_24h']
 
-    if(percentChange24 < 0):
+    if(float(percentChange24) < 0):
         changeColor = FAIL
     else:
         changeColor = OKGREEN
 
-    print "%s (%s) \t| USD: %s \t| %% Change 24H: %s%s" % (coinName, arg, priceUSD, changeColor, percentChange24)
+    print "%s%s (%s) \t| USD: %s \t| %% Change 24H: %s%s" % (RESET, coinName, arg, priceUSD, changeColor, percentChange24)
 
 

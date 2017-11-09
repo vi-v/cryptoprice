@@ -1,7 +1,7 @@
 # cryptoprice
 Python script to fetch cryptocurrency prices
 
-![alt text](https://imgur.com/yfVQ3Wo "")
+![image](https://i.imgur.com/yfVQ3Wo.png "")
 
 ## Usage
 Specify the symbol of the crpyto(s) after the script name

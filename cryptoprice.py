@@ -1,6 +1,7 @@
 import urllib
 import sys
 import json
+import pprint
 
 args = sys.argv[1:]
 response = urllib.urlopen('https://api.coinmarketcap.com/v1/ticker/')
@@ -14,8 +15,24 @@ OKGREEN = '\033[92m'
 FAIL = '\033[91m'
 RESET = '\033[0;0m'
 
-if args[0] == '-a':
+if '-a' in args:
     findall = True
+
+if '-susda' in args:
+    cryptoData.sort(key=lambda x: x['price_usd'], reverse=False)
+
+if '-susdd' in args:
+    cryptoData.sort(key=lambda x: x['price_usd'], reverse=True)
+
+if '-s24ha' in args:
+    cryptoData.sort(key=lambda x: x['percent_change_24h'], reverse=False)
+
+if '-s24hd' in args:
+    cryptoData.sort(key=lambda x: x['percent_change_24h'], reverse=True)
+
+for arg in args:
+    if arg.count('-') == 1:
+        args.remove(arg)
 
 for data in cryptoData:
     crpytoDataMap[data['symbol']] = data

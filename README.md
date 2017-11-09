@@ -19,4 +19,9 @@ Ethereum (ETH) 	| USD: 326.737 	| % Change 24H: 7.42
 Monero (XMR) 	| USD: 118.634 	| % Change 24H: 13.642
 ```
 
+### To view all crypto stats, use the -a flag
+```
+python cryptoprice.py -a
+```
+
 This script is written in python2

@@ -1,0 +1,6 @@
+Cryptoprice.egg-info/PKG-INFO
+Cryptoprice.egg-info/SOURCES.txt
+Cryptoprice.egg-info/dependency_links.txt
+Cryptoprice.egg-info/entry_points.txt
+Cryptoprice.egg-info/requires.txt
+Cryptoprice.egg-info/top_level.txt

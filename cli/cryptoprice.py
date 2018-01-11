@@ -295,6 +295,10 @@ def portfolio(cmd):
             table.inner_heading_row_border = False
             click.echo(table.table)
 
+    # Display portfolio data
+    if not cmd:
+        click.echo('show port')
+
 cli.add_command(price)
 cli.add_command(portfolio)
 

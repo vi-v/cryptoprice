@@ -373,6 +373,7 @@ def portfolio(cmd):
         # Portfolio value and profit table
         total_table = [
             ['Portfolio Value ($)', round(total_hodlings_usd, 5)],
+            ['Investment ($)', round(investment_usd, 5)],
             ['Profit ($)', round(total_hodlings_usd - investment_usd, 5)],
         ]
 

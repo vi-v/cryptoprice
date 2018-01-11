@@ -1,2 +1,5 @@
 venv/
 db.json
+.vscode/
+Cryptoprice.egg-info/
+__pycache__/

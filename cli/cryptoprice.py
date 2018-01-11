@@ -140,8 +140,9 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
 
 # Portfolio tools
 @click.command()
+@click.option('--nocolor', is_flag=True, default=False)
 @click.argument('cmd', type=click.Choice(['add', 'remove', 'history', 'clear']), nargs=1, required=False)
-def portfolio(cmd):
+def portfolio(cmd, nocolor):
 
     # Database
     db = TinyDB('db.json')
@@ -361,7 +362,7 @@ def portfolio(cmd):
                 coin_info['coin'],
                 round(coin_info['amount'], 5),
                 round(coin_info['investment'], 5),
-                round(coin_info['profit'], 5)
+                click.style(str(round(coin_info['profit'], 5)), fg='green') if coin_info['profit'] > 0 else click.style(str(round(coin_info['profit'], 5)), fg='red') if not nocolor or (coin_info['profit'] == 0) else round(coin_info['profit'], 5)
             ] for coin_info in all_coin_info
         ]
 
@@ -371,10 +372,15 @@ def portfolio(cmd):
         click.echo(table.table)
 
         # Portfolio value and profit table
+        profit = round(total_hodlings_usd - investment_usd, 5)
+        if not nocolor:
+            if profit > 0: profit = click.style(str(profit), fg='green')
+            elif profit < 0: profit = click.style(str(profit), fg='red')
+        
         total_table = [
             ['Portfolio Value ($)', round(total_hodlings_usd, 5)],
             ['Investment ($)', round(investment_usd, 5)],
-            ['Profit ($)', round(total_hodlings_usd - investment_usd, 5)],
+            ['Profit ($)', profit],
         ]
 
         table = SingleTable(total_table)

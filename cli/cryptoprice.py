@@ -1,11 +1,11 @@
 import datetime
 import click
 import requests
+import sys
 from tinydb import TinyDB, Query
 from prompt_toolkit import prompt
 from prompt_toolkit.contrib.completers import WordCompleter
 from terminaltables import SingleTable
-
 
 @click.group()
 def cli():
@@ -139,8 +139,9 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
 
 # Portfolio tools
 @click.command()
-@click.argument('cmd', type=click.Choice(['add', 'remove', 'history', 'clear']), nargs=1, required=True)
+@click.argument('cmd', type=click.Choice(['add', 'remove', 'history', 'clear']), nargs=1, required=False)
 def portfolio(cmd):
+
     # Database
     db = TinyDB('db.json')
 
@@ -233,7 +234,27 @@ def portfolio(cmd):
 
     # Remove transaction
     if cmd == 'remove':
-        pass
+        if not sys.stdin.isatty():
+            remove_tx_tuple = sys.stdin.readline()
+        else:
+            remove_tx_tuple = prompt('remove transactions > ')
+
+        if not remove_tx_tuple:
+            return
+
+        remove_tx_tuple = tuple(int(x.strip()) for x in remove_tx_tuple.split(','))
+
+        transaction = Query()
+        removed_ids = []
+        for tx_id in remove_tx_tuple:
+            if db.search(transaction.id == tx_id):
+                removed_ids.append(tx_id)
+                db.remove(transaction.id == tx_id)
+        
+        if removed_ids:
+            click.echo('Removed transaction(s): ' + str(tuple(removed_ids)))
+        else:
+            click.echo('No transactions were removed')
 
     # Clear transaction database
     if cmd == 'clear':
@@ -276,3 +297,17 @@ def portfolio(cmd):
 
 cli.add_command(price)
 cli.add_command(portfolio)
+
+
+class BasedIntParamType(click.ParamType):
+    name = 'integer'
+
+    def convert(self, value, param, ctx):
+        try:
+            if value[:2].lower() == '0x':
+                return int(value[2:], 16)
+            elif value[:1] == '0':
+                return int(value, 8)
+            return int(value, 10)
+        except ValueError:
+            self.fail('%s is not a valid integer' % value, param, ctx)

@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'Click',
         'requests',
+        'terminaltables'
     ],
     entry_points='''
         [console_scripts]

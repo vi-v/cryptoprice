@@ -384,17 +384,3 @@ def portfolio(cmd):
 
 cli.add_command(price)
 cli.add_command(portfolio)
-
-
-class BasedIntParamType(click.ParamType):
-    name = 'integer'
-
-    def convert(self, value, param, ctx):
-        try:
-            if value[:2].lower() == '0x':
-                return int(value[2:], 16)
-            elif value[:1] == '0':
-                return int(value, 8)
-            return int(value, 10)
-        except ValueError:
-            self.fail('%s is not a valid integer' % value, param, ctx)

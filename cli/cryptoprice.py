@@ -58,7 +58,11 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
         coins = all_coins
 
     for coin in coins:
+        if not coin.upper() in crypto_data_map:
+            continue
+
         coin_data = crypto_data_map[coin.upper()]
+
         table_row = []
 
         coin_info = coin_data['name'] + " (" + coin_data['symbol'] + ")"

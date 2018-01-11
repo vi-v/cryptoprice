@@ -141,8 +141,10 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
 # Portfolio tools
 @click.command()
 @click.option('--nocolor', is_flag=True, default=False)
+@click.option('--value', is_flag=True, default=False)
+@click.option('--profit', is_flag=True, default=False)
 @click.argument('cmd', type=click.Choice(['add', 'remove', 'history', 'clear']), nargs=1, required=False)
-def portfolio(cmd, nocolor):
+def portfolio(cmd, nocolor, value, profit):
 
     # Database
     db = TinyDB('db.json')
@@ -354,6 +356,23 @@ def portfolio(cmd, nocolor):
         all_coin_info = sorted(
             all_coin_info, key=lambda k: k['profit'], reverse=True)
 
+        # Calculate profits
+        port_profit = round(total_hodlings_usd - investment_usd, 5)
+        if not nocolor:
+            if port_profit > 0: port_profit = click.style(str(port_profit), fg='green')
+            elif port_profit < 0: port_profit = click.style(str(port_profit), fg='red')
+
+        min_info = ''
+        if value:
+            min_info += 'Value: ' + str(round(total_hodlings_usd, 5)) + ' '
+
+        if profit:
+            min_info += 'Profit: ' + str(port_profit)
+
+        if value or profit:
+            click.echo(min_info + '\n')
+            return
+
         # Individual coin value and profit table
         coin_table = [
             ['Coin', 'Amount', 'Investment ($)', 'Profit ($)'],
@@ -372,15 +391,10 @@ def portfolio(cmd, nocolor):
         click.echo(table.table)
 
         # Portfolio value and profit table
-        profit = round(total_hodlings_usd - investment_usd, 5)
-        if not nocolor:
-            if profit > 0: profit = click.style(str(profit), fg='green')
-            elif profit < 0: profit = click.style(str(profit), fg='red')
-        
         total_table = [
             ['Portfolio Value ($)', round(total_hodlings_usd, 5)],
             ['Investment ($)', round(investment_usd, 5)],
-            ['Profit ($)', profit],
+            ['Profit ($)', str(port_profit)],
         ]
 
         table = SingleTable(total_table)

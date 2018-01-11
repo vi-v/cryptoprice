@@ -7,6 +7,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.contrib.completers import WordCompleter
 from terminaltables import SingleTable
 
+
 @click.group()
 def cli():
     pass
@@ -242,7 +243,8 @@ def portfolio(cmd):
         if not remove_tx_tuple:
             return
 
-        remove_tx_tuple = tuple(int(x.strip()) for x in remove_tx_tuple.split(','))
+        remove_tx_tuple = tuple(int(x.strip())
+                                for x in remove_tx_tuple.split(','))
 
         transaction = Query()
         removed_ids = []
@@ -250,7 +252,7 @@ def portfolio(cmd):
             if db.search(transaction.id == tx_id):
                 removed_ids.append(tx_id)
                 db.remove(transaction.id == tx_id)
-        
+
         if removed_ids:
             click.echo('Removed transaction(s): ' + str(tuple(removed_ids)))
         else:
@@ -262,7 +264,8 @@ def portfolio(cmd):
             click.echo('There are no transactions to delete')
             return
 
-        decision = prompt('are you sure you want to clear all transactions? (y/n) > ')
+        decision = prompt(
+            'are you sure you want to clear all transactions? (y/n) > ')
 
         if decision.lower() == 'y':
             db.purge()
@@ -297,7 +300,86 @@ def portfolio(cmd):
 
     # Display portfolio data
     if not cmd:
-        click.echo('show port')
+
+        if not db.all():
+            click.echo('Your portfolio is empty.')
+            return
+
+        response = requests.get('https://api.coinmarketcap.com/v1/ticker/')
+        crypto_data = response.json()
+        crypto_data_map = {}  # Dictionary for faster access
+        all_coins = []  # List of all coin names
+
+        for crypto in crypto_data:
+            all_coins.append(crypto['symbol'])
+            crypto_data_map[crypto['symbol']] = crypto
+
+        total_hodlings_usd = 0
+        investment_usd = 0
+        all_coin_info = {}
+
+        for tx in db.all():
+
+            if tx['coin'] in all_coin_info:
+                coin_info = all_coin_info[tx['coin']]
+            else:
+                all_coin_info[tx['coin']] = coin_info = {
+                    'amount': 0,
+                    'investment': 0,
+                    'profit': 0
+                }
+
+            if tx['type'] == 'BUY':
+                modifier = 1
+            elif tx['type'] == 'SELL':
+                modifier = -1
+
+            total_hodlings_usd += modifier * \
+                tx['amount'] * float(crypto_data_map[tx['coin']]['price_usd'])
+            investment_usd += modifier * tx['amount'] * tx['price']
+            coin_info['amount'] += modifier * tx['amount']
+            coin_info['investment'] += modifier * tx['amount'] * tx['price']
+
+            all_coin_info[tx['coin']] = coin_info
+
+        # Calculate profit for each coin
+        for key in all_coin_info:
+            coin_info = all_coin_info[key]
+            coin_info['coin'] = key
+            coin_info['profit'] = coin_info['amount'] * float(
+                crypto_data_map[key]['price_usd']) - coin_info['investment']
+
+        all_coin_info = all_coin_info.values()
+        all_coin_info = sorted(
+            all_coin_info, key=lambda k: k['profit'], reverse=True)
+
+        # Individual coin value and profit table
+        coin_table = [
+            ['Coin', 'Amount', 'Investment ($)', 'Profit ($)'],
+        ] + [
+            [
+                coin_info['coin'],
+                round(coin_info['amount'], 5),
+                round(coin_info['investment'], 5),
+                round(coin_info['profit'], 5)
+            ] for coin_info in all_coin_info
+        ]
+
+        table = SingleTable(coin_table)
+        table.inner_row_border = True
+        table.inner_heading_row_border = False
+        click.echo(table.table)
+
+        # Portfolio value and profit table
+        total_table = [
+            ['Portfolio Value ($)', round(total_hodlings_usd, 5)],
+            ['Profit ($)', round(total_hodlings_usd - investment_usd, 5)],
+        ]
+
+        table = SingleTable(total_table)
+        table.inner_row_border = True
+        table.inner_heading_row_border = False
+        click.echo(table.table)
 
 cli.add_command(price)
 cli.add_command(portfolio)

@@ -41,17 +41,13 @@ def price(nocolor, table, coins, nousd, btc, rank, allcoins, volume, marketcap, 
 
     # Print table if specified
     table_data = []
-    table_headers = []
-
-    if(rank):
-        table_headers.append('Rank')
-
-    table_headers.append('Name')
-
+    table_headers = ['Name']
     if(not nousd):
         table_headers.append('USD')
     if(btc):
         table_headers.append('BTC')
+    if(rank):
+        table_headers.append('Rank')
     if(volume):
         table_headers.append('Volume')
     if(marketcap):
@@ -75,11 +71,6 @@ def price(nocolor, table, coins, nousd, btc, rank, allcoins, volume, marketcap, 
         coin_data = crypto_data_map[coin.upper()]
 
         table_row = []
-        coin_info = ''
-        
-        if(rank):
-            coin_info += " | Rank: " + coin_data['rank']
-            table_row.append(coin_data['rank'])
 
         coin_info = coin_data['name'] + " (" + coin_data['symbol'] + ")"
         table_row.append(coin_info)
@@ -91,6 +82,10 @@ def price(nocolor, table, coins, nousd, btc, rank, allcoins, volume, marketcap, 
         if(btc):
             coin_info += " | BTC: " + coin_data['price_btc']
             table_row.append(coin_data['price_btc'])
+
+        if(rank):
+            coin_info += " | Rank: " + coin_data['rank']
+            table_row.append(coin_data['rank'])
 
         if(volume):
             coin_info += " | Volume: " + coin_data['24h_volume_usd']

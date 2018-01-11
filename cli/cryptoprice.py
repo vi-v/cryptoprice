@@ -22,14 +22,14 @@ def cli():
 @click.option('--nousd', is_flag=True, default=False)
 @click.option('--btc', is_flag=True, default=False)
 @click.option('--rank', is_flag=True, default=False)
-@click.option('--all', is_flag=True, default=False)
+@click.option('--all', 'allcoins', is_flag=True, default=False)
 @click.option('--volume', is_flag=True, default=False)
 @click.option('--marketcap', is_flag=True, default=False)
 @click.option('--change1h', is_flag=True, default=False)
 @click.option('--change24h', is_flag=True, default=False)
 @click.option('--change7d', is_flag=True, default=False)
 @click.argument('coins', nargs=-1)
-def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, change1h, change24h, change7d):
+def price(nocolor, table, coins, nousd, btc, rank, allcoins, volume, marketcap, change1h, change24h, change7d):
     response = requests.get('https://api.coinmarketcap.com/v1/ticker/')
     crypto_data = response.json()
     crypto_data_map = {}  # Dictionary for faster access
@@ -61,7 +61,7 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
     table_data.append(table_headers)
 
     # if --all or no coin is specified, list all
-    if all or not coins:
+    if allcoins or not coins:
         coins = all_coins
 
     for coin in coins:

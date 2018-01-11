@@ -1,3 +1,5 @@
 Click
 requests
 terminaltables
+tinydb
+prompt_toolkit

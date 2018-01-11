@@ -7,7 +7,9 @@ setup(
     install_requires=[
         'Click',
         'requests',
-        'terminaltables'
+        'terminaltables',
+        'tinydb',
+        'prompt_toolkit'
     ],
     entry_points='''
         [console_scripts]

@@ -1,11 +1,17 @@
+import datetime
 import click
 import requests
+from tinydb import TinyDB, Query
+from prompt_toolkit import prompt
+from prompt_toolkit.contrib.completers import WordCompleter
 from terminaltables import SingleTable
 
 
 @click.group()
 def cli():
     pass
+
+# Price command
 
 
 @click.command()
@@ -26,7 +32,7 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
     response = requests.get('https://api.coinmarketcap.com/v1/ticker/')
     crypto_data = response.json()
     crypto_data_map = {}  # Dictionary for faster access
-    all_coins = [] # List of all coin names
+    all_coins = []  # List of all coin names
 
     for crypto in crypto_data:
         all_coins.append(crypto['symbol'])
@@ -95,7 +101,7 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
                     perc_change = click.style(perc_change, fg='green')
                 else:
                     perc_change = click.style(perc_change, fg='red')
-                
+
             coin_info += " | % Change 1H: " + perc_change
             table_row.append(perc_change)
 
@@ -106,7 +112,7 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
                     perc_change = click.style(perc_change, fg='green')
                 else:
                     perc_change = click.style(perc_change, fg='red')
-                
+
             coin_info += " | % Change 24H: " + perc_change
             table_row.append(perc_change)
 
@@ -117,7 +123,7 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
                     perc_change = click.style(perc_change, fg='green')
                 else:
                     perc_change = click.style(perc_change, fg='red')
-                
+
             coin_info += " | % Change 7D: " + perc_change
             table_row.append(perc_change)
 
@@ -130,4 +136,143 @@ def price(nocolor, table, coins, nousd, btc, rank, all, volume, marketcap, chang
         term_table = SingleTable(table_data)
         click.echo(term_table.table)
 
+
+# Portfolio tools
+@click.command()
+@click.argument('cmd', type=click.Choice(['add', 'remove', 'history', 'clear']), nargs=1, required=True)
+def portfolio(cmd):
+    # Database
+    db = TinyDB('db.json')
+
+    # Add transaction
+    if cmd == 'add':
+        click.echo('Add new transaction')
+
+        response = requests.get('https://api.coinmarketcap.com/v1/ticker/')
+        crypto_data = response.json()
+        crypto_data_map = {}  # Dictionary for faster access
+        all_coins = []  # List of all coin names
+
+        for crypto in crypto_data:
+            all_coins.append(crypto['symbol'])
+            crypto_data_map[crypto['symbol']] = crypto
+
+        # buy/sell transaction
+        tx_type_completer = WordCompleter(['buy', 'sell'], ignore_case=True)
+        tx_type = prompt('type (buy/sell) > ', completer=tx_type_completer)
+
+        while not (tx_type.lower() == 'buy' or tx_type.lower() == 'sell'):
+            click.secho('ERROR: invalid transaction type', fg='red')
+            tx_type = prompt('type (buy/sell) > ', completer=tx_type_completer)
+
+        # coin type
+        tx_coin_completer = WordCompleter(all_coins, ignore_case=True)
+        tx_coin = prompt('coin > ', completer=tx_coin_completer)
+
+        while tx_coin not in all_coins:
+            click.secho('ERROR: coin does not exist in list', fg='red')
+            tx_coin = prompt('coin > ', completer=tx_coin_completer)
+
+        # buy/sell price
+        tx_coin_price = prompt(
+            tx_type + ' price per coin (leave blank to use market price) > ')
+        if not tx_coin_price and tx_coin_price != 0:
+            tx_coin_price = crypto_data_map[tx_coin]['price_usd']
+
+        # amount
+        tx_amount = prompt('amount > ')
+
+        while not tx_amount:
+            click.secho('ERROR: invalid amount')
+            tx_amount = prompt('amount > ')
+
+        # date
+        tx_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        # coin market value
+        coin_market_price = crypto_data_map[tx_coin]['price_usd']
+
+        # calculate tx ID
+        db_transactions = db.all()
+        if not db_transactions:
+            tx_id = 0x1
+        else:
+            db_transactions = sorted(
+                db_transactions, key=lambda k: k['id'], reverse=True)
+            tx_id = db_transactions[0]['id'] + 0x1
+
+        tx_info = {
+            'type': tx_type.upper(),
+            'coin': tx_coin,
+            'price': float(tx_coin_price),
+            'amount': float(tx_amount),
+            'date': tx_date,
+            'id': tx_id
+        }
+
+        db.insert(tx_info)
+
+        hodl_change = float(tx_amount) * float(coin_market_price)
+        if(tx_type.lower() == 'buy'):
+            hodl_change = click.style('+' + str(hodl_change), fg='green')
+        if(tx_type.lower() == 'sell'):
+            hodl_change = click.style('-' + str(hodl_change), fg='red')
+
+        tx_info_table = [
+            ['ADDED TRANSACTION'],
+            ['Type', tx_type.upper()],
+            ['Coin', tx_coin],
+            ['Price ($)', tx_coin_price],
+            ['Amount', tx_amount],
+            ['Timestamp', tx_date],
+            ['ID', tx_id],
+            ['Δ holdings', hodl_change]
+        ]
+
+        click.echo(SingleTable(tx_info_table).table)
+
+    # Remove transaction
+    if cmd == 'remove':
+        pass
+
+    # Clear transaction database
+    if cmd == 'clear':
+        if not db.all():
+            click.echo('There are no transactions to delete')
+            return
+
+        decision = prompt('are you sure you want to clear all transactions? (y/n) > ')
+
+        if decision.lower() == 'y':
+            db.purge()
+            click.echo('DELETED ALL TRANSACTIONS')
+
+    # Print all transactions
+    if cmd == 'history':
+        db_transactions = db.all()
+
+        if not db_transactions:
+            click.echo('There are no transactions to display')
+            return
+
+        for tx in db_transactions:
+            if(tx['type'] == 'BUY'):
+                tx_type = click.style(tx['type'], fg='green')
+            if(tx['type'] == 'SELL'):
+                tx_type = click.style(tx['type'], fg='red')
+
+            tx_info_table = [
+                ['Type', tx_type],
+                ['Coin', tx['coin']],
+                ['Price ($)', tx['price']],
+                ['Amount', tx['amount']],
+                ['Timestamp', tx['date']],
+                ['ID', tx['id']]
+            ]
+
+            table = SingleTable(tx_info_table)
+            table.inner_heading_row_border = False
+            click.echo(table.table)
+
 cli.add_command(price)
+cli.add_command(portfolio)

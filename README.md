@@ -70,7 +70,7 @@ Available arguments
 | remove        | Delete a transaction. You will have to one or a list of transaction IDs to delete. |
 | history       | View all transactions.                                                             |
 | clear         | Delete all transactions.                                                           |
-| *no argument* | Show full portfolio status                                                         |
+| *no argument* | Show full portfolio status.                                                        |
 
 Options for this command are listed below. These options affect the way portfolio status is displayed.
 | Option    | Description                  |

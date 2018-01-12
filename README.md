@@ -5,6 +5,7 @@
 - [Commands](#commands)
     - [Price](#price)
     - [Portfolio](#portfolio)
+        - [add](#add)
 
 # Introduction
 
@@ -82,3 +83,8 @@ Options for this command are listed below. These options affect the way portfoli
 | --profit  | Show total profit in USD.    |
 | --help    | Show this message and exit.  |
 
+### add
+
+Example usage of the add function
+
+![alt text](img/scrot3.png)

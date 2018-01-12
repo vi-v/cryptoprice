@@ -64,13 +64,13 @@ For more help, run the command
 The portfolio command lets you add/remove portfolio transactions and view the status of your portfolio.
 
 Available arguments
-| Argument      | Description                                                                        |
-| ------------- | ---------------------------------------------------------------------------------- |
-| add           | Record a new buy/sell transaction.                                                 |
-| remove        | Delete a transaction. You will have to one or a list of transaction IDs to delete. |
-| history       | View all transactions.                                                             |
-| clear         | Delete all transactions.                                                           |
-| *no argument* | Show full portfolio status.                                                        |
+Argument | Description
+--- | ---
+add | Record a new buy/sell transaction.
+remove | Delete a transaction. You will have to one or a list of transaction IDs to delete.
+history | View all transactions.
+clear | Delete all transactions.
+*no argument* | Show full portfolio status.
 
 Options for this command are listed below. These options affect the way portfolio status is displayed.
 | Option    | Description                  |

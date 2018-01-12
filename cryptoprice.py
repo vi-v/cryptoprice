@@ -149,7 +149,7 @@ def price(nocolor, table, coins, nousd, btc, rank, allcoins, volume, marketcap, 
 @click.option('--profit', is_flag=True, default=False, help="Show total profit in USD.")
 @click.argument('cmd', type=click.Choice(['add', 'remove', 'history', 'clear']), nargs=1, required=False)
 def portfolio(cmd, nocolor, value, profit):
-    """Command to manage your local portfolio"""
+    """Command to manage your local portfolio. Arguments: add, remove, clear, history"""
 
     # Database
     db = TinyDB('db.json')

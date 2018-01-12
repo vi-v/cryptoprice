@@ -4,6 +4,7 @@
 - [Installation](#installation)
 - [Commands](#commands)
     - [Price](#price)
+    - [Portfolio](#portfolio)
 
 # Introduction
 
@@ -32,6 +33,7 @@ Running ```cryptoprice``` should give you this:
 ## Price
 
 The price command lets you access market information about any cryptocurrency.
+
 Options for this command are listed below.
 
 | Option      | Description                                     |
@@ -56,3 +58,25 @@ The image below shows the price command along with some options and some coins. 
 
 For more help, run the command
 ```cryptoprice price --help```
+
+## Portfolio
+
+The portfolio command lets you add/remove portfolio transactions and view the status of your portfolio.
+
+Available arguments
+| Argument | Description                                                                        |
+| -------- | ---------------------------------------------------------------------------------- |
+| add      | Record a new buy/sell transaction.                                                 |
+| remove   | Delete a transaction. You will have to one or a list of transaction IDs to delete. |
+| history  | View all transactions.                                                             |
+| clear    | Delete all transactions.                                                           |
+|          | Show full portfolio status                                                         |
+
+Options for this command are listed below. These options affect the way portfolio status is displayed.
+| Option    | Description                  |
+| --------- | ---------------------------- |
+| --nocolor | Disable colorized output.    |
+| --value   | Show portfolio value in USD. |
+| --profit  | Show total profit in USD.    |
+| --help    | Show this message and exit.  |
+

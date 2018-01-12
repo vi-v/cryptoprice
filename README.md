@@ -48,6 +48,11 @@ Options for this command are listed below.
 | --change24h | Show change in the past 24 hours.               |
 | --change7d  | Show change in the past 7 days                  |
 
-The image below shows the price command along with some options and some coins. The first command is run with the --table option, and the second without.
+The syntax for this command is ```cryptoprice price [options] [coins]```
+
+The image below shows the price command along with some options and some coins. The first command is run with the ```--table``` option, and the second without.
 
 ![alt text](img/scrot2.png)
+
+For more help, run the command
+```cryptoprice price --help```

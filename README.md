@@ -1,27 +1,7 @@
-# cryptoprice
-Python script to fetch cryptocurrency prices
+# Table of Contents
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
 
-![image](https://i.imgur.com/yfVQ3Wo.png "")
+# Introduction
 
-## Usage
-Specify the symbol of the crpyto(s) after the script name
-
-Example usage:
-```
-python cryptoprice.py --BTC --LTC --ETH --XMR
-```
-
-Output:
-```
-Bitcoin (BTC) 	| USD: 7195.95 	| % Change 24H: -4.21
-Litecoin (LTC) 	| USD: 63.8407 	| % Change 24H: 3.02
-Ethereum (ETH) 	| USD: 326.737 	| % Change 24H: 7.42
-Monero (XMR) 	| USD: 118.634 	| % Change 24H: 13.642
-```
-
-### To view all crypto stats, use the -a flag
-```
-python cryptoprice.py -a
-```
-
-This script is written in python2
+Cryptoprice was created with the intention of making it easy to keep track of your portfolio and monitor the market all in the command line. This project is a work in progress. I will actively work on it and update it with new features. If you have an idea about a feature you would like implemented, please open a new issue.

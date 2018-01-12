@@ -18,10 +18,7 @@ def cli():
     pass
 
 # Price command
-
-
 @click.command()
-# @click.argument('coin', default='all', nargs=-1, help='Get price in USD for specified cryptos. Use --all to list price for all coins.')
 @click.option('--nocolor', is_flag=True, default=False, help="Disable colorized output.")
 @click.option('--table', is_flag=True, default=False, help="Show output in a neat table.")
 @click.option('--nousd', is_flag=True, default=False, help="Hide price in USD.")

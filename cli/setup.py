@@ -9,7 +9,7 @@ setup(
         'requests',
         'terminaltables',
         'tinydb',
-        'prompt_toolkit'
+        'prompt_toolkit',
     ],
     entry_points='''
         [console_scripts]

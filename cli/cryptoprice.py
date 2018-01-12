@@ -10,6 +10,11 @@ from terminaltables import SingleTable
 
 @click.group()
 def cli():
+    """Welcome to cryptoprice!
+        For further information about commands, use the --help
+        flag along with the command.
+        Ex: cryptoprice price --help
+    """
     pass
 
 # Price command
@@ -17,19 +22,21 @@ def cli():
 
 @click.command()
 # @click.argument('coin', default='all', nargs=-1, help='Get price in USD for specified cryptos. Use --all to list price for all coins.')
-@click.option('--nocolor', is_flag=True, default=False)
-@click.option('--table', is_flag=True, default=False)
-@click.option('--nousd', is_flag=True, default=False)
-@click.option('--btc', is_flag=True, default=False)
-@click.option('--rank', is_flag=True, default=False)
-@click.option('--all', 'allcoins', is_flag=True, default=False)
-@click.option('--volume', is_flag=True, default=False)
-@click.option('--marketcap', is_flag=True, default=False)
-@click.option('--change1h', is_flag=True, default=False)
-@click.option('--change24h', is_flag=True, default=False)
-@click.option('--change7d', is_flag=True, default=False)
+@click.option('--nocolor', is_flag=True, default=False, help="Disable colorized output.")
+@click.option('--table', is_flag=True, default=False, help="Show output in a neat table.")
+@click.option('--nousd', is_flag=True, default=False, help="Hide price in USD.")
+@click.option('--btc', is_flag=True, default=False, help="Show price in BTC.")
+@click.option('--rank', is_flag=True, default=False, help="Show coin rank.")
+@click.option('--all', 'allcoins', is_flag=True, default=False, help="Show top 100 coins according to market capital.")
+@click.option('--volume', is_flag=True, default=False, help="Show volume traded in 24 hours.")
+@click.option('--marketcap', is_flag=True, default=False, help="Show coin market capital.")
+@click.option('--change1h', is_flag=True, default=False, help="Show change in the past 1 hour.")
+@click.option('--change24h', is_flag=True, default=False, help="Show change in the past 24 hours.")
+@click.option('--change7d', is_flag=True, default=False, help="Show change in the past 7 days")
 @click.argument('coins', nargs=-1)
 def price(nocolor, table, coins, nousd, btc, rank, allcoins, volume, marketcap, change1h, change24h, change7d):
+    """Command to view information about cryptocurrencies"""
+
     response = requests.get('https://api.coinmarketcap.com/v1/ticker/')
     crypto_data = response.json()
     crypto_data_map = {}  # Dictionary for faster access
@@ -140,11 +147,12 @@ def price(nocolor, table, coins, nousd, btc, rank, allcoins, volume, marketcap, 
 
 # Portfolio tools
 @click.command()
-@click.option('--nocolor', is_flag=True, default=False)
-@click.option('--value', is_flag=True, default=False)
-@click.option('--profit', is_flag=True, default=False)
+@click.option('--nocolor', is_flag=True, default=False, help="Disable colorized output.")
+@click.option('--value', is_flag=True, default=False, help="Show portfolio value in USD.")
+@click.option('--profit', is_flag=True, default=False, help="Show total profit in USD.")
 @click.argument('cmd', type=click.Choice(['add', 'remove', 'history', 'clear']), nargs=1, required=False)
 def portfolio(cmd, nocolor, value, profit):
+    """Command to manage your local portfolio"""
 
     # Database
     db = TinyDB('db.json')

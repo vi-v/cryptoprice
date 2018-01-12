@@ -25,7 +25,7 @@ python setup.py install
 Note: It is recommended to install the package using pip rather than setuptools.
 
 Running ```cryptoprice``` should give you this:
-![alt text](img/scrot1.png "Logo Title Text 1")
+![alt text](img/scrot1.png)
 
 # Commands
 
@@ -47,3 +47,7 @@ Options for this command are listed below.
 | --change1h  | Show change in the past 1 hour.                 |
 | --change24h | Show change in the past 24 hours.               |
 | --change7d  | Show change in the past 7 days                  |
+
+The image below shows the price command along with some options and some coins. The first command is run with the --table option, and the second without.
+
+![alt text](img/scrot2.png)
